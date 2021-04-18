@@ -1,16 +1,16 @@
 package main
 
 import (
-	"github.com/baloon/go/oauth/handler/auth"
+	"github.com/baloon/go/auth/handler/oauth/google"
 	"log"
 	"net/http"
 	"os"
 )
 
 func main() {
-	http.HandleFunc("/oauth/google", auth.OauthGoogle)
-	http.HandleFunc("/oauth/google/callback", auth.OauthCallbackGoogle)
-	http.HandleFunc("/oauth/google/token", auth.GetAccessToken)
+	http.HandleFunc("/oauth/google", google.Oauth)
+	http.HandleFunc("/oauth/google/callback", google.OauthCallback)
+	http.HandleFunc("/oauth/google/token", google.GetAccessToken)
 
 	port := os.Getenv("PORT")
 	if port == "" {

@@ -1,4 +1,4 @@
-package auth
+package google
 
 import (
 	"encoding/json"
@@ -57,7 +57,7 @@ func init() {
 	store.Options.HttpOnly = true
 }
 
-func OauthGoogle(w http.ResponseWriter, r *http.Request) {
+func Oauth(w http.ResponseWriter, r *http.Request) {
 	redirectUrl := r.FormValue("redirectUrl")
 
 	u, err := uuid.NewUUID()
@@ -72,7 +72,7 @@ func OauthGoogle(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, url, http.StatusFound)
 }
 
-func OauthCallbackGoogle(w http.ResponseWriter, r *http.Request) {
+func OauthCallback(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Credentials", "true")
 
 	code := r.FormValue("code")
