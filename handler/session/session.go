@@ -1,9 +1,9 @@
 package session
 
 import (
+	"github.com/Netflix/go-env"
 	"github.com/joho/godotenv"
 	"log"
-	"os"
 )
 
 const (
@@ -11,8 +11,12 @@ const (
 )
 
 var (
-	clientEntryPoint string
+	ClientEntryPoint string
 )
+
+type Environment struct {
+	ClientEntryPoint string `env:"CLIENT_ENTRY_POINT"`
+}
 
 func init() {
 	err := godotenv.Load()
@@ -20,7 +24,13 @@ func init() {
 		log.Fatal("error while loading .env file")
 	}
 
-	if clientEntryPoint = os.Getenv("CLIENT_ENTRY_POINT"); clientEntryPoint == "" {
-		log.Fatalln("Environment value CLIENT_ENTRY_POINT is empty.")
+	var environment Environment
+	_, err = env.UnmarshalFromEnviron(&environment)
+	if err != nil {
+		log.Fatalln("error while parsing environment variables:", err)
+	}
+
+	if ClientEntryPoint = environment.ClientEntryPoint; ClientEntryPoint == "" {
+		log.Fatalln("Environment variable CLIENT_ENTRY_POINT is empty.")
 	}
 }

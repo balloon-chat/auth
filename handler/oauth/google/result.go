@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/baloon/go/auth/app/infrastructure/firebase"
 	"github.com/baloon/go/auth/handler/oauth"
+	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
 	"net/url"
@@ -19,9 +20,9 @@ type Response struct {
 }
 
 // GetOauthResult OAuth認証によって取得したアクセストークンを用いて、ユーザーのプロフィールを取得する。
-func GetOauthResult(w http.ResponseWriter, r *http.Request) {
+func GetOauthResult(c *gin.Context) {
 	store := oauth.Store
-	session, _ := store.Get(r, oauth.SessionCookieName)
+	session, _ := store.Get(c.Request, oauth.SessionCookieName)
 	sessionId, ok := session.Values[oauth.SessionIdCookieKey]
 	if !ok {
 		return
@@ -32,32 +33,28 @@ func GetOauthResult(w http.ResponseWriter, r *http.Request) {
 		// アクセストークンから、ユーザープロファイルを取得
 		accessToken, ok := accessTokens[st]
 		if !ok {
-			w.WriteHeader(http.StatusUnauthorized)
+			c.Status(http.StatusUnauthorized)
 			return
 		}
 
 		profile, err := getUserProfile(accessToken)
 		if err != nil {
 			log.Println(err)
-			w.WriteHeader(http.StatusUnauthorized)
+			c.Status(http.StatusUnauthorized)
 			return
 		}
 
 		// 登録状態を確認
-		found, _ := firebase.FindUserByEmail(r.Context(), profile.Email)
+		found, _ := firebase.FindUserByEmail(c.Request.Context(), profile.Email)
 
-		res := Response{
+		c.JSON(http.StatusOK, Response{
 			AccessToken: accessToken,
 			Name:        profile.Name,
 			PhotoUrl:    profile.PhotoUrl,
 			NewUser:     !found,
-		}
-		if err = json.NewEncoder(w).Encode(res); err != nil {
-			log.Println("error while encoding response:", err)
-			w.WriteHeader(http.StatusInternalServerError)
-		}
+		})
 	default:
-		w.WriteHeader(http.StatusUnauthorized)
+		c.Status(http.StatusUnauthorized)
 	}
 }
 

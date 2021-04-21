@@ -3,31 +3,54 @@ package main
 import (
 	"github.com/baloon/go/auth/handler/oauth/google"
 	"github.com/baloon/go/auth/handler/session"
+	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
 	"os"
 )
 
 func main() {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
+	r := gin.Default()
+
+	r.GET("/", func(c *gin.Context) {
+		c.Status(http.StatusOK)
 	})
 
-	http.HandleFunc("/oauth/google", google.Oauth)
-	http.HandleFunc("/oauth/google/callback", google.OauthCallback)
-	http.HandleFunc("/oauth/google/result", google.GetOauthResult)
+	g := r.Group("/oauth")
+	{
+		g = g.Group("/google")
+		{
+			g.GET("/", google.Oauth)
+			g.GET("/callback", google.OauthCallback)
+			g.GET("/result", google.GetOauthResult)
+		}
+	}
 
-	http.HandleFunc("/session/login", session.Login)
-	http.HandleFunc("/session/logout", session.Logout)
-	http.HandleFunc("/profile", session.GetProfile)
+	g = r.Group("/session")
+	{
+		g.POST("/login", session.Login)
+		g.OPTIONS("/login", setPostHeader)
+
+		g.POST("/logout", session.Logout)
+		g.OPTIONS("/logout", setPostHeader)
+
+		g.GET("/profile", session.GetProfile)
+	}
 
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
 	}
 
-	log.Println("Listening on port", port)
-	if err := http.ListenAndServe(":"+port, nil); err != nil {
+	if err := r.Run(":" + port); err != nil {
 		log.Fatalln(err)
 	}
+}
+
+func setPostHeader(c *gin.Context) {
+	c.Header("Access-Control-Allow-Origin", session.ClientEntryPoint)
+	c.Header("Access-Control-Allow-Headers", "Content-Type")
+	c.Header("Access-Control-Allow-Methods", "POST")
+	c.Header("Access-Control-Allow-Credentials", "true")
+	c.Status(http.StatusOK)
 }

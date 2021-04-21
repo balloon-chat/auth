@@ -2,6 +2,7 @@ package oauth
 
 import (
 	goEnv "github.com/Netflix/go-env"
+	"github.com/baloon/go/auth/app/infrastructure/cookie"
 	"github.com/baloon/go/auth/env"
 	"github.com/gorilla/sessions"
 	"github.com/joho/godotenv"
@@ -60,4 +61,5 @@ func init() {
 	Store.Options.Path = "/"
 	Store.Options.Secure = !env.DEBUG
 	Store.Options.MaxAge = int(24 * time.Hour * 5)
+	Store.Options.Domain = cookie.CookieDomain
 }
