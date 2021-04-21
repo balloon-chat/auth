@@ -7,5 +7,6 @@ require (
 	github.com/Netflix/go-env v0.0.0-20210215222557-e437a7e7f9fb
 	github.com/google/uuid v1.2.0
 	github.com/gorilla/sessions v1.2.1
+	github.com/joho/godotenv v1.3.0 // indirect
 	golang.org/x/oauth2 v0.0.0-20210413134643-5e61552d6c78
 )

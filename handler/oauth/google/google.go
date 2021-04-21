@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/Netflix/go-env"
 	"github.com/baloon/go/auth/handler/oauth"
+	"github.com/joho/godotenv"
 	"golang.org/x/oauth2"
 	"log"
 )
@@ -28,8 +29,13 @@ type Environment struct {
 }
 
 func init() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("error while loading .env file")
+	}
+
 	var environment Environment
-	_, err := env.UnmarshalFromEnviron(&environment)
+	_, err = env.UnmarshalFromEnviron(&environment)
 	if err != nil {
 		log.Fatalln("error while parsing environment variables:", err)
 	}
