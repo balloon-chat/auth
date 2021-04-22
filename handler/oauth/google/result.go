@@ -3,8 +3,8 @@ package google
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/baloon/go/auth/app/infrastructure/firebase"
-	"github.com/baloon/go/auth/handler/oauth"
+	"github.com/balloon/auth/app/infrastructure/firebase"
+	"github.com/balloon/auth/handler/oauth"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"

@@ -2,7 +2,7 @@ package session
 
 import (
 	"context"
-	"github.com/baloon/go/auth/app/infrastructure/firebase"
+	"github.com/balloon/auth/app/infrastructure/firebase"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"

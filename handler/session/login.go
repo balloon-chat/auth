@@ -2,9 +2,9 @@ package session
 
 import (
 	"context"
-	cookie2 "github.com/baloon/go/auth/app/infrastructure/cookie"
-	"github.com/baloon/go/auth/app/infrastructure/firebase"
-	"github.com/baloon/go/auth/env"
+	"github.com/balloon/auth/app/infrastructure/cookie"
+	"github.com/balloon/auth/app/infrastructure/firebase"
+	"github.com/balloon/auth/env"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
@@ -53,7 +53,7 @@ func Login(c *gin.Context) {
 	}
 
 	// セッションCookieを作成
-	cookie, err := client.SessionCookie(c.Request.Context(), request.IdToken, expiresIn)
+	ck, err := client.SessionCookie(c.Request.Context(), request.IdToken, expiresIn)
 	if err != nil {
 		log.Println("Failed to create session cookie:", err)
 		c.Status(http.StatusInternalServerError)
@@ -62,10 +62,10 @@ func Login(c *gin.Context) {
 
 	c.SetCookie(
 		sessionKey,
-		cookie,
+		ck,
 		int(expiresIn.Seconds()),
 		"/",
-		cookie2.CookieDomain,
+		cookie.CookieDomain,
 		!env.DEBUG,
 		true,
 	)

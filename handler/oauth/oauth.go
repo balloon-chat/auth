@@ -2,8 +2,8 @@ package oauth
 
 import (
 	goEnv "github.com/Netflix/go-env"
-	"github.com/baloon/go/auth/app/infrastructure/cookie"
-	"github.com/baloon/go/auth/env"
+	"github.com/balloon/auth/app/infrastructure/cookie"
+	"github.com/balloon/auth/env"
 	"github.com/gorilla/sessions"
 	"github.com/joho/godotenv"
 	"log"
