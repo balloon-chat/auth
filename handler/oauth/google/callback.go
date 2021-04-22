@@ -1,6 +1,7 @@
 package google
 
 import (
+	"github.com/baloon/go/auth/app/infrastructure/firebase"
 	"github.com/baloon/go/auth/handler/oauth"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -36,12 +37,23 @@ func OauthCallback(c *gin.Context) {
 	// アクセストークンを保持
 	accessTokens[sessionId] = token.AccessToken
 
-	// リダイレクト
+	profile, err := getUserProfile(token.AccessToken)
+	if err != nil {
+		return
+	}
+
+	found, _ := firebase.FindUserByEmail(c.Request.Context(), profile.Email)
+	if !found {
+		// 新規ユーザーの場合、sign inページへ
+		c.Redirect(http.StatusFound, oauth.ClientSignInUrl)
+		return
+	}
+
+	// ユーザーがすでに登録されている場合は、指定されているページへリダイレクトする
 	state := c.Query("state")
 	if redirectUrl, ok := redirectUrls[state]; ok {
-		// ユーザーがすでに登録されている場合は、指定されているページへリダイレクトする
-		http.Redirect(c.Writer, c.Request, redirectUrl, http.StatusSeeOther)
+		c.Redirect(http.StatusSeeOther, redirectUrl)
 	} else {
-		c.Status(http.StatusInternalServerError)
+		c.Redirect(http.StatusFound, oauth.ClientLoginUrl)
 	}
 }

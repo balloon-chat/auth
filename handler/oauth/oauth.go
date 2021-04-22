@@ -20,6 +20,7 @@ const (
 
 var (
 	ClientSignInUrl string
+	ClientLoginUrl  string
 	BaseUrl         string
 	Store           *sessions.CookieStore
 )
@@ -27,6 +28,7 @@ var (
 type Environment struct {
 	BaseUrl          string `env:"BASE_URL"`
 	ClientSignInUrl  string `env:"CLIENT_SIGN_IN_URL"`
+	ClientLoginUrl   string `env:"CLIENT_LOGIN_URL"`
 	SessionSecretKey string `env:"SESSION_SECRET_KEY"`
 }
 
@@ -45,6 +47,11 @@ func init() {
 	ClientSignInUrl = environment.ClientSignInUrl
 	if ClientSignInUrl == "" {
 		log.Fatalln("Environment variable CLIENT_SIGN_IN_URL is empty")
+	}
+
+	ClientLoginUrl = environment.ClientLoginUrl
+	if ClientLoginUrl == "" {
+		log.Fatalln("Environment variable CLIENT_LOGIN_URL is empty")
 	}
 
 	BaseUrl = environment.BaseUrl

@@ -29,7 +29,7 @@ type Environment struct {
 }
 
 func init() {
-	err := godotenv.Load()
+	err := godotenv.Load(".env.local")
 	if err != nil {
 		log.Fatal("error while loading .env file")
 	}
