@@ -3,7 +3,7 @@ package google
 import (
 	"fmt"
 	"github.com/Netflix/go-env"
-	"github.com/baloon/go/auth/handler/oauth"
+	"github.com/balloon/auth/handler/oauth"
 	"github.com/joho/godotenv"
 	"golang.org/x/oauth2"
 	"log"

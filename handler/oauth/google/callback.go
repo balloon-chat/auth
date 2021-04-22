@@ -1,8 +1,8 @@
 package google
 
 import (
-	"github.com/baloon/go/auth/app/infrastructure/firebase"
-	"github.com/baloon/go/auth/handler/oauth"
+	"github.com/balloon/auth/app/infrastructure/firebase"
+	"github.com/balloon/auth/handler/oauth"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"log"

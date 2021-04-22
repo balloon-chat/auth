@@ -1,4 +1,4 @@
-module github.com/baloon/go/auth
+module github.com/balloon/auth
 
 go 1.16
 

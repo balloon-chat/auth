@@ -1,8 +1,8 @@
 package session
 
 import (
-	"github.com/baloon/go/auth/app/infrastructure/cookie"
-	"github.com/baloon/go/auth/env"
+	"github.com/balloon/auth/app/infrastructure/cookie"
+	"github.com/balloon/auth/env"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
