@@ -2,7 +2,6 @@ package oauth
 
 import (
 	goEnv "github.com/Netflix/go-env"
-	"github.com/balloon/auth/app/infrastructure/cookie"
 	"github.com/balloon/auth/env"
 	"github.com/gorilla/sessions"
 	"github.com/joho/godotenv"
@@ -33,6 +32,10 @@ type Environment struct {
 }
 
 func init() {
+	if env.DEBUG {
+		_ = godotenv.Load(".env.develop")
+	}
+
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("error while loading .env file")
@@ -63,10 +66,15 @@ func init() {
 	if sessionSecretKey == "" {
 		log.Fatalln("Environment variable SESSION_SECRET_KEY is empty")
 	}
+
+	expiresIn := 24 * time.Hour * 5
+
 	Store = sessions.NewCookieStore([]byte(sessionSecretKey))
-	Store.Options.HttpOnly = true
-	Store.Options.Path = "/"
-	Store.Options.Secure = !env.DEBUG
-	Store.Options.MaxAge = int(24 * time.Hour * 5)
-	Store.Options.Domain = cookie.CookieDomain
+	Store.Options = &sessions.Options{
+		HttpOnly: true,
+		Path:     "/",
+		Domain:   "localhost",
+		Secure:   !env.DEBUG,
+		MaxAge:   int(expiresIn.Seconds()),
+	}
 }
