@@ -1,7 +1,8 @@
 package session
 
 import (
-	"github.com/Netflix/go-env"
+	goenv "github.com/Netflix/go-env"
+	"github.com/balloon/auth/env"
 	"github.com/joho/godotenv"
 	"log"
 )
@@ -19,13 +20,17 @@ type Environment struct {
 }
 
 func init() {
+	if env.DEBUG {
+		_ = godotenv.Load(".env.develop")
+	}
+
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("error while loading .env file")
 	}
 
 	var environment Environment
-	_, err = env.UnmarshalFromEnviron(&environment)
+	_, err = goenv.UnmarshalFromEnviron(&environment)
 	if err != nil {
 		log.Fatalln("error while parsing environment variables:", err)
 	}
