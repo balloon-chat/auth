@@ -2,9 +2,9 @@ package session
 
 import (
 	"context"
-	"github.com/balloon/auth/app/infrastructure/cookie"
-	"github.com/balloon/auth/app/infrastructure/firebase"
 	"github.com/balloon/auth/env"
+	cookie2 "github.com/balloon/auth/internal/infrastructure/cookie"
+	firebase2 "github.com/balloon/auth/internal/infrastructure/firebase"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
@@ -32,22 +32,16 @@ func Login(c *gin.Context) {
 	// 有効期限: 5日
 	expiresIn := 24 * time.Hour * 5
 
-	client, err := firebase.NewFirebaseAuthClient(context.Background())
+	client, err := firebase2.NewFirebaseAuthClient(context.Background())
 	if err != nil {
 		log.Println(err)
 		c.Status(http.StatusInternalServerError)
 		return
 	}
 
-	decoded, err := client.VerifyIDToken(c.Request.Context(), request.IdToken)
+	_, err = client.VerifyIDToken(c.Request.Context(), request.IdToken)
 	if err != nil {
 		log.Println("Invalid ID token", err)
-		c.Status(http.StatusUnauthorized)
-		return
-	}
-
-	// 最終ログインが5分以内でなければ、再ログインを要求
-	if time.Now().Unix()-decoded.AuthTime > 5*60 {
 		c.Status(http.StatusUnauthorized)
 		return
 	}
@@ -65,7 +59,7 @@ func Login(c *gin.Context) {
 		ck,
 		int(expiresIn.Seconds()),
 		"/",
-		cookie.CookieDomain,
+		cookie2.CookieDomain,
 		!env.DEBUG,
 		true,
 	)
