@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/balloon/auth/handler/oauth/google"
-	"github.com/balloon/auth/handler/session"
+	"github.com/balloon/auth/internal/interface/api/server/handler/oauth/google"
+	"github.com/balloon/auth/internal/interface/api/server/handler/session"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"

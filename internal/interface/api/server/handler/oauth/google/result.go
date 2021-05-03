@@ -3,8 +3,8 @@ package google
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/balloon/auth/app/infrastructure/firebase"
-	"github.com/balloon/auth/handler/oauth"
+	firebase2 "github.com/balloon/auth/internal/infrastructure/firebase"
+	"github.com/balloon/auth/internal/interface/api/server/handler/oauth"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
@@ -45,7 +45,7 @@ func GetOauthResult(c *gin.Context) {
 		}
 
 		// 登録状態を確認
-		found, _ := firebase.FindUserByEmail(c.Request.Context(), profile.Email)
+		found, _ := firebase2.FindUserByEmail(c.Request.Context(), profile.Email)
 
 		c.JSON(http.StatusOK, Response{
 			AccessToken: accessToken,

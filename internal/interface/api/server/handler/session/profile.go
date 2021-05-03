@@ -2,7 +2,7 @@ package session
 
 import (
 	"context"
-	"github.com/balloon/auth/app/infrastructure/firebase"
+	firebase2 "github.com/balloon/auth/internal/infrastructure/firebase"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
@@ -22,7 +22,7 @@ func GetProfile(c *gin.Context) {
 		return
 	}
 
-	client, err := firebase.NewFirebaseAuthClient(context.Background())
+	client, err := firebase2.NewFirebaseAuthClient(context.Background())
 	if err != nil {
 		c.Status(http.StatusInternalServerError)
 		log.Println(err)
