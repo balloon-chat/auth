@@ -39,15 +39,9 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	decoded, err := client.VerifyIDToken(c.Request.Context(), request.IdToken)
+	_, err = client.VerifyIDToken(c.Request.Context(), request.IdToken)
 	if err != nil {
 		log.Println("Invalid ID token", err)
-		c.Status(http.StatusUnauthorized)
-		return
-	}
-
-	// 最終ログインが5分以内でなければ、再ログインを要求
-	if time.Now().Unix()-decoded.AuthTime > 5*60 {
 		c.Status(http.StatusUnauthorized)
 		return
 	}
