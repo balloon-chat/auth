@@ -43,20 +43,25 @@ func OauthCallback(c *gin.Context) {
 		return
 	}
 
+	// 登録状況に応じてリダイレクト
+	state := c.Query("state")
 	found, _ := firebase.FindUserByEmail(c.Request.Context(), profile.Email)
 	if !found {
 		// 新規ユーザーの場合、sign inページへ
-		c.Redirect(http.StatusFound, oauth.ClientSignInUrl)
-		return
+		if redirectUrl, ok := redirectUrls[state]; ok {
+			c.Redirect(http.StatusFound, fmt.Sprintf("%s?return_to=%s", oauth.ClientSignInUrl, redirectUrl))
+			return
+		} else {
+			c.Redirect(http.StatusFound, oauth.ClientSignInUrl)
+			return
+		}
 	}
 
 	// ユーザーがすでに登録されている場合は、指定されているページへリダイレクトする
-	state := c.Query("state")
-
 	if redirectUrl, ok := redirectUrls[state]; ok {
-		log.Println(fmt.Sprintf("%s?return_to=%s", oauth.ClientLoginUrl, redirectUrl))
 		c.Redirect(http.StatusFound, fmt.Sprintf("%s?return_to=%s", oauth.ClientLoginUrl, redirectUrl))
 	} else {
 		c.Redirect(http.StatusFound, oauth.ClientLoginUrl)
 	}
+
 }
