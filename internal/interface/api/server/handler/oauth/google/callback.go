@@ -1,7 +1,8 @@
 package google
 
 import (
-	firebase2 "github.com/balloon/auth/internal/infrastructure/firebase"
+	"fmt"
+	"github.com/balloon/auth/internal/infrastructure/firebase"
 	"github.com/balloon/auth/internal/interface/api/server/handler/oauth"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -42,7 +43,7 @@ func OauthCallback(c *gin.Context) {
 		return
 	}
 
-	found, _ := firebase2.FindUserByEmail(c.Request.Context(), profile.Email)
+	found, _ := firebase.FindUserByEmail(c.Request.Context(), profile.Email)
 	if !found {
 		// 新規ユーザーの場合、sign inページへ
 		c.Redirect(http.StatusFound, oauth.ClientSignInUrl)
@@ -51,8 +52,10 @@ func OauthCallback(c *gin.Context) {
 
 	// ユーザーがすでに登録されている場合は、指定されているページへリダイレクトする
 	state := c.Query("state")
+
 	if redirectUrl, ok := redirectUrls[state]; ok {
-		c.Redirect(http.StatusSeeOther, redirectUrl)
+		log.Println(fmt.Sprintf("%s?return_to=%s", oauth.ClientLoginUrl, redirectUrl))
+		c.Redirect(http.StatusFound, fmt.Sprintf("%s?return_to=%s", oauth.ClientLoginUrl, redirectUrl))
 	} else {
 		c.Redirect(http.StatusFound, oauth.ClientLoginUrl)
 	}
