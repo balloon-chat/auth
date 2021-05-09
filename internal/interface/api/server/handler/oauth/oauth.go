@@ -3,8 +3,8 @@ package oauth
 import (
 	goEnv "github.com/Netflix/go-env"
 	"github.com/balloon/auth/env"
+	"github.com/balloon/auth/internal/infrastructure/cookie"
 	"github.com/gorilla/sessions"
-	"github.com/joho/godotenv"
 	"log"
 	"time"
 )
@@ -32,17 +32,10 @@ type Environment struct {
 }
 
 func init() {
-	if env.DEBUG {
-		_ = godotenv.Load(".env.develop")
-	}
-
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("error while loading .env file")
-	}
+	env.LoadEnv()
 
 	var environment Environment
-	_, err = goEnv.UnmarshalFromEnviron(&environment)
+	_, err := goEnv.UnmarshalFromEnviron(&environment)
 	if err != nil {
 		log.Fatalln("error while parsing environment variables:", err)
 	}
@@ -73,7 +66,7 @@ func init() {
 	Store.Options = &sessions.Options{
 		HttpOnly: true,
 		Path:     "/",
-		Domain:   "localhost",
+		Domain:   cookie.CookieDomain,
 		Secure:   !env.DEBUG,
 		MaxAge:   int(expiresIn.Seconds()),
 	}

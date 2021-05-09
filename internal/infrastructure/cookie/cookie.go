@@ -2,7 +2,7 @@ package cookie
 
 import (
 	goEnv "github.com/Netflix/go-env"
-	"github.com/joho/godotenv"
+	"github.com/balloon/auth/env"
 	"log"
 )
 
@@ -15,13 +15,9 @@ type Environment struct {
 }
 
 func init() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("error while loading .env file")
-	}
-
+	env.LoadEnv()
 	var environment Environment
-	_, err = goEnv.UnmarshalFromEnviron(&environment)
+	_, err := goEnv.UnmarshalFromEnviron(&environment)
 	if err != nil {
 		log.Fatalln("error while parsing environment variables:", err)
 	}
