@@ -25,6 +25,7 @@ func GetOauthResult(c *gin.Context) {
 	session, _ := store.Get(c.Request, oauth.SessionCookieName)
 	sessionId, ok := session.Values[oauth.SessionIdCookieKey]
 	if !ok {
+		c.Status(http.StatusUnauthorized)
 		return
 	}
 

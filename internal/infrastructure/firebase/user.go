@@ -6,20 +6,13 @@ import (
 	"firebase.google.com/go/v4/auth"
 	"fmt"
 	"github.com/balloon/auth/env"
-	"github.com/joho/godotenv"
 	"log"
 )
 
 var client *auth.Client
 
 func init() {
-	if env.DEBUG {
-		err := godotenv.Load()
-		if err != nil {
-			log.Fatalln("error while loading .env file:", err)
-		}
-	}
-
+	env.LoadEnv()
 	c, err := NewFirebaseAuthClient(context.Background())
 	if err != nil {
 		log.Fatalln(err)

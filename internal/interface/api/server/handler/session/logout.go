@@ -2,7 +2,7 @@ package session
 
 import (
 	"github.com/balloon/auth/env"
-	cookie2 "github.com/balloon/auth/internal/infrastructure/cookie"
+	"github.com/balloon/auth/internal/infrastructure/cookie"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -19,7 +19,7 @@ func Logout(c *gin.Context) {
 		"",
 		-1, // Cookieを削除する
 		"/",
-		cookie2.CookieDomain,
+		cookie.CookieDomain,
 		!env.DEBUG,
 		true,
 	)

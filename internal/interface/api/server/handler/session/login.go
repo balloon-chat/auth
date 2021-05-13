@@ -3,8 +3,8 @@ package session
 import (
 	"context"
 	"github.com/balloon/auth/env"
-	cookie2 "github.com/balloon/auth/internal/infrastructure/cookie"
-	firebase2 "github.com/balloon/auth/internal/infrastructure/firebase"
+	"github.com/balloon/auth/internal/infrastructure/cookie"
+	"github.com/balloon/auth/internal/infrastructure/firebase"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
@@ -32,7 +32,7 @@ func Login(c *gin.Context) {
 	// 有効期限: 5日
 	expiresIn := 24 * time.Hour * 5
 
-	client, err := firebase2.NewFirebaseAuthClient(context.Background())
+	client, err := firebase.NewFirebaseAuthClient(context.Background())
 	if err != nil {
 		log.Println(err)
 		c.Status(http.StatusInternalServerError)
@@ -59,7 +59,7 @@ func Login(c *gin.Context) {
 		ck,
 		int(expiresIn.Seconds()),
 		"/",
-		cookie2.CookieDomain,
+		cookie.CookieDomain,
 		!env.DEBUG,
 		true,
 	)
