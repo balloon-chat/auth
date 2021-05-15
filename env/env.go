@@ -11,7 +11,7 @@ var DEBUG bool
 var VERSION string
 
 func init() {
-	err := godotenv.Load(".env", ".env.local")
+	err := godotenv.Load(".env")
 	if err != nil {
 		log.Fatalln("error while loading .env file:", err)
 	}
